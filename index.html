@@ -156,15 +156,16 @@
         }
 
         .glass-card {
-            /* Transparency kept high (per design doc) — readability comes from
-               text-shadow halos + a slightly stronger blur, not from opacity. */
-            background: rgba(8, 10, 22, 0.42);
-            backdrop-filter: blur(18px) saturate(140%);
-            -webkit-backdrop-filter: blur(18px) saturate(140%);
+            /* High transparency — the mountain shader shows through clearly.
+               Readability is carried entirely by the text-shadow halos below,
+               not by the card background. */
+            background: rgba(8, 10, 22, 0.22);
+            backdrop-filter: blur(10px) saturate(125%);
+            -webkit-backdrop-filter: blur(10px) saturate(125%);
 
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), inset 0 0 40px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
             border-radius: 24px;
             padding: 50px;
             max-width: 900px;
@@ -176,11 +177,16 @@
             will-change: transform, opacity;
         }
         /* Readability halo for ALL text inside glass-cards.
-           Two-layer shadow: tight dark outline + soft glow. Works on snow AND night sky. */
+           Three-layer shadow: tight dark outline (1px) + mid halo (3px) + soft glow (16px).
+           This is what makes text readable at low card opacity — the halo creates a local
+           dark pocket around each glyph regardless of what's bleeding through behind it. */
         .glass-card h1, .glass-card h2, .glass-card p,
         .glass-card .project-title, .glass-card .project-desc,
         .glass-card .tag, .glass-card .download-btn {
-            text-shadow: 0 1px 2px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.55);
+            text-shadow:
+                0 1px 2px rgba(0,0,0,0.95),
+                0 2px 6px rgba(0,0,0,0.75),
+                0 0 16px rgba(0,0,0,0.6);
         }
 
         section.in-view .glass-card { opacity: 1; transform: translateY(0) scale(1); }
