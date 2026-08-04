@@ -617,63 +617,130 @@
 
         /* Phones in LANDSCAPE — the real mobile experience */
         @media (pointer: coarse) and (max-height: 500px) {
-            /* Tighter typography for short landscape viewports */
+            /* Section padding: leave room on the right for the dot-nav (~34px)
+               and use generous horizontal padding so text never touches edges. */
+            section {
+                padding: 16px 48px 16px 20px;
+                /* Allow vertical scroll within a section if content is taller
+                   than the short landscape viewport. Scroll-snap still works
+                   section-to-section; this just prevents content from being
+                   clipped when it doesn't fit. */
+                align-items: flex-start;
+                overflow-y: auto;
+            }
+            /* Center content vertically ONLY when it fits; otherwise let it scroll.
+               flex-start + overflow-y: auto above handles the "doesn't fit" case. */
+            section:not(:has(.glass-card)) {
+                align-items: center;
+            }
+
+            /* Content block: constrain to viewport width with right padding for nav */
             .glass-card {
-                padding: 22px 32px;
-                max-width: 92vw;
+                padding: 18px 20px;
+                max-width: calc(100vw - 60px);  /* viewport minus nav + padding */
+                width: 100%;
+                overflow-x: hidden;  /* safety: long tags/titles clip instead of pushing width */
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
-            h1 { font-size: 1.6rem; letter-spacing: -1px; margin-bottom: 0.8rem; }
-            h2 { font-size: 0.85rem; margin-bottom: 0.6rem; }
-            p { font-size: 0.85rem; line-height: 1.5; margin-bottom: 0.6rem; }
+            /* The radial ::before shouldn't be clipped by overflow-x: hidden on the card.
+               Reposition it to extend beyond the card using inset + negative offsets
+               that stay within the section padding. */
+            .glass-card::before {
+                inset: -8% -8%;
+            }
 
-            .project-title { font-size: 1rem; margin-bottom: 0.15rem; }
-            .project-desc { font-size: 0.78rem; margin-bottom: 0.9rem; line-height: 1.45; }
-            .project-desc code { font-size: 0.78em; padding: 0 4px; }
+            /* Typography — scaled for short landscape viewports */
+            h1 { font-size: 1.3rem; letter-spacing: -0.5px; margin-bottom: 0.6rem; }
+            h2 { font-size: 0.78rem; margin-bottom: 0.5rem; }
+            p { font-size: 0.78rem; line-height: 1.45; margin-bottom: 0.5rem; }
 
-            .tag { font-size: 0.62rem; padding: 4px 9px; margin-right: 5px; margin-bottom: 5px; }
+            .project-title { font-size: 0.92rem; margin-bottom: 0.1rem; }
+            .project-desc {
+                font-size: 0.72rem;
+                margin-bottom: 0.7rem;
+                line-height: 1.4;
+            }
+            .project-desc code { font-size: 0.72em; padding: 0 3px; }
 
-            .download-btn { padding: 7px 14px; font-size: 0.78rem; margin-top: 0.8rem; }
+            .tag {
+                font-size: 0.58rem;
+                padding: 3px 7px;
+                margin-right: 4px;
+                margin-bottom: 4px;
+            }
 
-            /* Intro — keep the large name but clamp for landscape */
+            .download-btn {
+                padding: 6px 12px;
+                font-size: 0.72rem;
+                margin-top: 0.6rem;
+            }
+
+            /* Intro — constrained for landscape */
+            .intro-content {
+                max-width: calc(100vw - 60px);
+                padding-right: 20px;
+            }
             .intro-name {
-                font-size: clamp(2rem, 7vw, 3.5rem);
-                margin-bottom: 0.3rem;
+                font-size: clamp(1.8rem, 6vw, 3rem);
+                margin-bottom: 0.25rem;
             }
-            .intro-title { font-size: 0.75rem; margin-bottom: 0.8rem; letter-spacing: 0.2em; }
-            .intro-subtitle { font-size: 0.95rem; }
-            #section-intro { padding-bottom: 6vh; }
+            .intro-title {
+                font-size: 0.68rem;
+                margin-bottom: 0.6rem;
+                letter-spacing: 0.18em;
+            }
+            .intro-subtitle { font-size: 0.85rem; }
+            #section-intro {
+                padding-bottom: 6vh;
+                align-items: flex-end;
+            }
+
+            /* Quant section — the Colt title and email need to scale down */
+            .project-title[style*="1.4rem"] { font-size: 1.05rem !important; }
+
+            /* Contact email — was 1.5rem, way too big for landscape */
+            p[style*="1.5rem"] {
+                font-size: 1rem !important;
+                word-break: break-all;  /* long email doesn't push width */
+            }
 
             /* Quote scales down */
-            .big-quote { font-size: 1.3rem; line-height: 1.4; }
-            .quote-author { font-size: 0.7rem; margin-top: 16px; }
+            .quote-container {
+                padding: 30px 20px;
+                max-width: calc(100vw - 60px);
+            }
+            .big-quote { font-size: 1.1rem; line-height: 1.4; }
+            .quote-author { font-size: 0.65rem; margin-top: 12px; }
 
-            /* Section padding tighter top/bottom */
-            section { padding: 20px 16px; }
-
-            /* Status bar: keep but smaller, lower contrast */
+            /* Status bar: keep but smaller, lower contrast, tuck into corner */
             .status-bar {
-                font-size: 0.6rem;
-                bottom: 10px;
-                right: 12px;
-                line-height: 1.5;
+                font-size: 0.55rem;
+                bottom: 6px;
+                right: 8px;
+                line-height: 1.4;
             }
 
-            /* Dot nav: keep visible but smaller, closer to edge */
+            /* Dot nav: smaller, closer to edge */
             #dot-nav {
-                right: 10px;
-                padding: 6px 4px;
+                right: 6px;
+                padding: 5px 3px;
             }
-            .dot-nav-item { width: 24px; height: 24px; }
-            .dot-nav-item::after { width: 5px; height: 5px; }
-            .dot-nav-item.active::after { width: 6px; height: 6px; }
-            .dot-nav-separator { height: 5px; }
-            .dot-nav-item::before { font-size: 0.55rem; padding: 4px 8px; }
+            .dot-nav-item { width: 20px; height: 20px; }
+            .dot-nav-item::after { width: 4px; height: 4px; }
+            .dot-nav-item.active::after { width: 5px; height: 5px; }
+            .dot-nav-separator { height: 4px; }
+            .dot-nav-item::before {
+                font-size: 0.5rem;
+                padding: 3px 6px;
+                right: calc(100% + 8px);
+            }
 
             /* Scroll progress bar slightly thinner */
             #scroll-progress { height: 1px; }
 
             /* Preloader text smaller */
-            #preloader .loader-text { font-size: 0.75rem; letter-spacing: 2px; }
+            #preloader .loader-text { font-size: 0.7rem; letter-spacing: 2px; }
         }
 
         /* Fallback for narrow windows on non-touch devices (small tablets, split-screen) */
